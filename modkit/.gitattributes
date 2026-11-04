@@ -1,0 +1,6 @@
+# The repo root sets "* text=auto eol=lf", which is right for the C sources
+# and wrong for these: cmd.exe does not accept a bare LF as a line ending, and
+# a .bat checked out with LF fails with garbled labels and "command not found".
+# .bat and .cmd must keep CRLF in the repository, not just in the checkout.
+*.bat text eol=crlf
+*.cmd text eol=crlf
