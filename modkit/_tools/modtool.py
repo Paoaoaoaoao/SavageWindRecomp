@@ -267,7 +267,7 @@ def cmd_list():
     print(RULE)
     print('')
     print('  %s  %s  %s  %s' % (pad('#', 4), pad('state', 8),
-                                pad('group', wmax), pad('files', 6).rstrip()))
+                                pad('group', wmax), 'files'.rjust(6)))
     print('  %s  %s  %s  %s' % ('-' * 4, '-' * 8, '-' * wmax, '-' * 6))
     for num, st, name, n in items:
         print('  %s  %s  %s  %s' % (pad(num, 4), pad(st, 8),
