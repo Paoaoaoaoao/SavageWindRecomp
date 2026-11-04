@@ -1,33 +1,30 @@
-# Put your mod groups here
+# Put your mod groups here · 把你的 MOD 分组放在这里
 
-Each subfolder is one switchable group, named `NN_something` where `NN`
-matches the number in `mods_config.ini`:
+**English** — each subfolder is one switchable group, named `NN_something`
+where `NN` matches `mods_config.ini`. The contents mirror the RomFS root: same
+paths the game reads, relative to it. Nothing else in this folder is committed;
+`mods/*` is gitignored on purpose so nobody pushes 450 MB of someone else's
+assets by accident.
 
-```
-  01_linkle_player/
-    Pack/TitleBG.pack
-  02_armour_fit/
-    Model/...
-  10_core_data/
-    System/Resource/ResourceSizeTable.product.srsizetable
-    Actor/ActorInfo.product.sbyml
-```
+**中文** —— 每个子文件夹是一组，命名 `NN_名字`，`NN` 和 `mods_config.ini`
+对应。里面的目录结构和 RomFS 根一致（路径就是游戏读取时的相对路径）。
+除本文件外，这个目录整个被 `.gitignore` 挡掉，避免有人顺手把别人的 450 MB
+素材提交上来。
 
-The folder contents must mirror the RomFS layout — the same paths the game
-would read, relative to the RomFS root. The console hard-links them into
-`_enabled/`, which becomes `SAVAGEWIND_ROMFS_OVERLAY`.
+## Read this first · 先看这几条
 
-No mod files are included in this repository. See the licence section in
-`../README.md`: the Linkle mod is CC BY-NC-ND 4.0, which does not allow
-redistributing modified copies, so these folders are yours to assemble from
-the authors' own downloads.
+Full details in [`../README.md`](../README.md) (English) or
+[`../README.zh-CN.md`](../README.zh-CN.md) (中文)。最容易崩的四条：
 
-Two things worth knowing before you fill this in:
-
-* **The `ResourceSizeTable` group is not optional.** It is the size registry
-  for every RomFS file. Mount bigger mod files without it and the game
-  allocates from stale sizes and crashes on load with `c0000005`. Keep it on
-  whenever anything else is on. The console warns you if you forget.
-* **A file claimed by two groups is taken from the first one only.** The
-  console lists such conflicts after every build; if you see them, the groups
-  overlap and one of them is being partly ignored.
+1. **The core-data group is mandatory.** `ResourceSizeTable.product.srsizetable`
+   is the size registry for every RomFS file. Without it the game allocates from
+   the old sizes and dies with `c0000005`. Only **one** group may ship it.
+   **核心数据组必开**，而且只能有一个组带这张表，否则载入时 `c0000005`。
+2. **A pack is replaced whole.** `Pack/TitleBG.pack/Model/…` is never read; ship
+   the entire `.pack`. **pack 只能整包替换**，塞在 pack 里的松散文件永远读不到。
+3. **Added files need an existing parent directory.** `Actor/Pack/NewThing/` is
+   silently skipped unless the game already has that directory, and the name is
+   matched case-sensitively. **新增文件的父目录必须是游戏里已有的**，且大小写敏感。
+4. **Two groups, same path: the first wins, silently.** Especially for
+   `Actor/ActorInfo.product.sbyml` and the RSTB — merge those, don't stack them.
+   **同一路径两组都给，先启用的赢**，两个登记表要合并而不是叠加。
