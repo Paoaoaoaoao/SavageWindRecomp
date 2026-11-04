@@ -1,0 +1,16 @@
+# The assembled overlay, rebuilt on every launch. Never commit it: it is hard
+# links into mods/, and on a full mod set it is several hundred megabytes.
+_enabled/
+_enabled_old/
+_enabled_old_*/
+
+# Mod assets stay local. They are third-party work (the Linkle mod is
+# CC BY-NC-ND 4.0, which forbids distributing modified copies) and they
+# contain Nintendo's original files. Only the README that describes the layout
+# is tracked here.
+mods/*
+!mods/README.md
+
+# Per-machine config: the group list itself is fine to share, but a resolved
+# absolute game path is not.
+mods_config.local.ini
